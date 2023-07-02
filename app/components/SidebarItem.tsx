@@ -9,7 +9,7 @@ interface SidebarItemProps {
 
 const SidebarItem: React.FC<SidebarItemProps> = ({title, icon, href}) => {
     return (
-        <div className='flex items-center text-2xl px-10 py-4 gap-2 font-normal'>
+        <div className='flex items-center text-2xl font-medium px-10 py-4 gap-2'>
             {icon}
             <Link href={href}>{title}</Link>
         </div>
