@@ -1,15 +1,16 @@
 import React from 'react'
 import {FaSearch, FaPlus } from 'react-icons/fa'
 import ProductPreview from '../components/ProductPreview'
+import Link from 'next/link'
 
 const Products = () => {
     return (
-        <div className='flex flex-col items-center px-64 left-64 w-[calc(100%-256px)] relative'>
+        <div className='flex flex-col items-center px-64 w-full relative'>
             <div className='flex gap-2 items-center bottom-8 right-64 absolute'>
                 <span className='font-medium text-2xl'>Add New Product</span>
-                <div className='p-6 bg-blue-700 rounded-full shadow-lg transition-colors text-white cursor-pointer hover:bg-blue-800'>
+                <Link href={"/products/add"} className='p-6 bg-blue-700 rounded-full shadow-lg transition-colors text-white cursor-pointer hover:bg-blue-800'>
                     <FaPlus/>
-                </div>
+                </Link>
             </div>
             
             <div className='flex flex-col items-center mt-16 w-full'>

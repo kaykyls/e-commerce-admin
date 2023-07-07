@@ -17,10 +17,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-      <div className='flex bg-slate-200 h-screen'>
         <Sidebar />
-        {children}
-      </div>
+        <div className='flex left-64 w-[calc(100%-256px)] relative bg-slate-200 h-screen'>
+          {children}
+        </div>
       </body>
     </html>
   )
