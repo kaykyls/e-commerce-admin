@@ -11,8 +11,8 @@ import Link from 'next/link'
 
 const Sidebar = () => {
     return (
-        <div className='fixed top-0 left-0 h-screen  w-80 bg-white text-gray-800 m-0 flex flex-col gap-12'>
-            <Link href={"/"} className='flex text-3xl items-center font-medium justify-center py-4 gap-1'>
+        <div className='fixed top-0 left-0 h-screen w-80 bg-white text-gray-800 m-0 flex flex-col gap-12'>
+            <Link href={"/"} className='flex text-3xl items-center font-medium px-10 py-4 gap-1'>
                 <GiConverseShoe/>
                 <span className='drop-shadow-md'>Shoes</span>
             </Link>

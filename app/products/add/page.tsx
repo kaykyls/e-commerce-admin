@@ -14,7 +14,7 @@ const Add: React.FC = () => {
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number>();
   const [selectedColor, setSelectedColor] = useState<string>("");
-  const [selectedSize, setSelectedSize] = useState<number>(39);
+  const [selectedSize, setSelectedSize] = useState<number>();
   const [stocks, setStocks] = useState<{color: string, size: string, stock: number}[]>([]);
 
   const handleAddColor = (color: string) => {
@@ -75,8 +75,8 @@ const Add: React.FC = () => {
         </div>
 
         <div className="flex gap-2 my-2">
-          {selectedColors.map((color) => 
-            <div onClick={handleSelectColor(color)} className={`cursor-pointer rounded-full relative px-6 py-2${selectedColor === color ? " bg-blue-700 outline outline-2 outline-slate-900 text-neutral-50" : " bg-slate-300"}`}>
+          {selectedColors.map((color, index) => 
+            <div key={index} onClick={handleSelectColor(color)} className={`cursor-pointer rounded-full relative px-6 py-2${selectedColor === color ? " bg-blue-700 outline outline-2 outline-slate-900 text-neutral-50" : " bg-slate-300"}`}>
               <span>{color}</span>
               <div className='flex items-center justify-center absolute w-5 h-5 bg-red-600 top-0 right-0 rounded-full cursor-pointer text-neutral-50'>
                 <CgClose className='w-3 h-3'/>
@@ -110,8 +110,8 @@ const Add: React.FC = () => {
         </div>
 
         <div className="flex gap-2 my-2">
-          {selectedSizes.map((size) => 
-            <div onClick={handleSelectSize(size)} className={`cursor-pointer rounded-full relative px-6 py-2${selectedSize === size ? " bg-blue-700 outline outline-2 outline-slate-900 text-neutral-50" : " bg-slate-300"}`}>
+          {selectedSizes.map((size, index) => 
+            <div key={index} onClick={handleSelectSize(size)} className={`cursor-pointer rounded-full relative px-6 py-2${selectedSize === size ? " bg-blue-700 outline outline-2 outline-slate-900 text-neutral-50" : " bg-slate-300"}`}>
               <span>{size}</span>
               <div className='flex items-center justify-center absolute w-5 h-5 bg-red-600 top-0 right-0 rounded-full cursor-pointer text-neutral-50'>
                 <CgClose className='w-3 h-3'/>
@@ -122,15 +122,15 @@ const Add: React.FC = () => {
 
         <div className='flex flex-col'>
           <label>{`Stock${selectedColor && selectedSize ? ` For ${selectedColor} ${selectedSize}` : ""}`}</label>
-          <input placeholder={!selectedColor || !selectedSize ? "Select Color And Size" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-slate-300 p-2 rounded-lg placeholder-slate-400' type="number" value={stock} onChange={(e) => setStock(parseInt(e.target.value, 10))} required />
+          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-slate-300 p-2 rounded-lg placeholder-slate-400' type="number" value={stock} onChange={(e) => setStock(parseInt(e.target.value, 10))} required />
         </div>
         <div className='flex flex-col'>
           <label>Description</label>
-          <textarea className='bg-slate-300 p-2 rounded-lg' value={description} onChange={(e) => setDescription(e.target.value)} required />
+          <textarea placeholder='Description' className='bg-slate-300 placeholder-slate-400 p-2 rounded-lg' value={description} onChange={(e) => setDescription(e.target.value)} required />
         </div>
         <div className='flex flex-col'>
           <label>Price</label>
-          <input className='bg-slate-300 p-2 rounded-lg' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+          <input placeholder='Price' className='placeholder-slate-400 bg-slate-300 p-2 rounded-lg' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
         </div>
       </form>
     </div>
