@@ -3,12 +3,13 @@
 import React, { useState } from 'react';
 import { GoUpload } from 'react-icons/go';
 import { CgClose } from 'react-icons/cg';
+import Image from 'next/image';
 
 const Add: React.FC = () => {
   const [productName, setProductName] = useState<string>('');
   const [category, setCategory] = useState<string>('');
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
-  const [selectedPhotos, setSelectedPhotos] = useState<File[]>([]);
+  const [selectedPhotos, setSelectedPhotos] = useState<{ file: File, color: string }[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
   const [stock, setStock] = useState<number>();
   const [description, setDescription] = useState<string>('');
@@ -43,9 +44,14 @@ const Add: React.FC = () => {
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
-      setSelectedPhotos(Array.from(event.target.files));
+      const newPhotos = Array.from(event.target.files).map((file) => ({
+        file,
+        color: selectedColor
+      }));
+      setSelectedPhotos([...selectedPhotos, ...newPhotos]);
     }
   };
+  
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,12 +74,11 @@ const Add: React.FC = () => {
           <label>Colors</label>
           <select onChange={(e) => handleAddColor(e.target.value)} className='bg-slate-300 p-2 rounded-lg text-slate-400' value={"Add New Color"}>
             <option value="">Add New Color</option>
-            <option className='text-slate-900' value="red">Red</option>
-            <option className='text-slate-900' value="blue">Blue</option>
-            <option className='text-slate-900' value="green">Green</option>
+            <option className='text-slate-900' value="Red">Red</option>
+            <option className='text-slate-900' value="Blue">Blue</option>
+            <option className='text-slate-900' value="Green">Green</option>
           </select>
         </div>
-
         <div className="flex gap-2 my-2">
           {selectedColors.map((color, index) => 
             <div key={index} onClick={handleSelectColor(color)} className={`cursor-pointer rounded-full relative px-6 py-2${selectedColor === color ? " bg-blue-700 outline outline-2 outline-slate-900 text-neutral-50" : " bg-slate-300"}`}>
@@ -84,14 +89,30 @@ const Add: React.FC = () => {
             </div>
           )}
         </div>
-
         <div className='flex flex-col'>
-          <span>Photos</span>
-          <label className='bg-slate-300 w-40 h-40 flex flex-col items-center justify-center rounded-lg text-slate-400' htmlFor="image-input">
-            <GoUpload className='w-6 h-6'/>
-            <span>Upload Image</span>
-          </label>
-          <input id='image-input' className='bg-slate-300 p-2 rounded-lg hidden' type="file" multiple onChange={handlePhotoChange} required />
+          <span>{`Photos${selectedColor ? ` For ${selectedColor}` : ""}`}</span>
+          <div className='flex gap-2 flex-wrap'>
+            {selectedPhotos
+              .filter((photo) => photo.color === selectedColor)
+              .map((photo, index) => (
+                <Image
+                  className='rounded-lg object-cover'
+                  key={index}
+                  src={URL.createObjectURL(photo.file)}
+                  alt=""
+                  width="160"
+                  height="160"
+                />
+              ))}
+            <label className={` ${selectedColor ? "cursor-pointer" : "cursor-not-allowed"} bg-slate-300 w-40 h-40 flex flex-col items-center justify-center rounded-lg text-slate-400`} htmlFor="image-input">
+              <GoUpload className='w-6 h-6'/>
+              <span>{selectedColor ? "Upload Image" : `Select Color First`}</span>
+            </label>
+            {selectedColor && 
+              <input id='image-input' className='bg-slate-300 p-2 rounded-lg hidden' type="file" multiple onChange={handlePhotoChange} required />
+            }
+          </div>
+
         </div>
         <div className='flex flex-col'>
           <label>Sizes</label>
@@ -122,7 +143,7 @@ const Add: React.FC = () => {
 
         <div className='flex flex-col'>
           <label>{`Stock${selectedColor && selectedSize ? ` For ${selectedColor} ${selectedSize}` : ""}`}</label>
-          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-slate-300 p-2 rounded-lg placeholder-slate-400' type="number" value={stock} onChange={(e) => setStock(parseInt(e.target.value, 10))} required />
+          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size First" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-slate-300 p-2 rounded-lg placeholder-slate-400' type="number" value={stock} onChange={(e) => setStock(parseInt(e.target.value, 10))} required />
         </div>
         <div className='flex flex-col'>
           <label>Description</label>
