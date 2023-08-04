@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GoUpload } from 'react-icons/go';
 import { CgClose } from 'react-icons/cg';
+import { FiCheck } from 'react-icons/fi';
 import Image from 'next/image';
 
 const Add: React.FC = () => {
   const [productName, setProductName] = useState<string>('');
-  const [category, setCategory] = useState<string>('');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedPhotos, setSelectedPhotos] = useState<{ file: File, color: string }[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
@@ -17,6 +18,17 @@ const Add: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<number>();
   const [stocks, setStocks] = useState<{color: string, size: string, stock: number}[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
+
+  const getCategories = async () => {
+    const response = await fetch('http://localhost:3333/categories');
+    const data = await response.json();
+    return data;
+  }
+
+  useEffect(() => {
+    getCategories().then((data) => setCategories(data));
+  }, [])
 
   const handleAddColor = (color: string) => {
     if (selectedColors.includes(color)) {
@@ -40,6 +52,10 @@ const Add: React.FC = () => {
 
   const handleSelectSize = (size: number) => () => {
     setSelectedSize(size);
+  }
+
+  const handleSelectCategory = (category: string) => () => {
+    setSelectedCategories([...selectedCategories, category]);
   }
 
   const handlePhotoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,10 +82,21 @@ const Add: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           <label>Category</label>
-          <select className='bg-slate-300 p-2 rounded-lg text-slate-400' onChange={(e) => setCategory(e.target.value)} required>
+          <select onChange={(e) => handleSelectCategory(e.target.value)} value={"Add New Category"} className='bg-slate-300 p-2 rounded-lg text-slate-400' required>
             <option value="">Add New Category</option>
+            {categories.map((category, index) => 
+              <option key={index} value={category.title}>{category.title}</option>
+            )}
           </select>
         </div>
+
+        <div className='flex'>
+              {selectedCategories.map((category, index) =>
+                <div key={index} className='bg-slate-300 p-2 rounded-lg text-slate-400'>{category}</div>
+              )}
+        </div>
+
+
         <div className='flex flex-col'>
           <label>Colors</label>
           <select onChange={(e) => handleAddColor(e.target.value)} className='bg-slate-300 p-2 rounded-lg text-slate-400' value={"Add New Color"}>
@@ -152,6 +179,11 @@ const Add: React.FC = () => {
         <div className='flex flex-col'>
           <label>Price</label>
           <input placeholder='Price' className='placeholder-slate-400 bg-slate-300 p-2 rounded-lg' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+        </div>
+
+        <div className='flex justify-end items-center gap-2 mt-4'>
+          <span>Finish</span>
+          <button className='bg-blue-700 text-neutral-50 rounded-full p-2' type="submit"><FiCheck className='text-3xl'/></button>
         </div>
       </form>
     </div>
