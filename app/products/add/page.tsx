@@ -5,19 +5,19 @@ import { GoUpload } from 'react-icons/go';
 import { CgClose } from 'react-icons/cg';
 import { FiCheck } from 'react-icons/fi';
 import Image from 'next/image';
+import axios from 'axios';
 
 const Add: React.FC = () => {
   const [productName, setProductName] = useState<string>('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>(["64b5e125d19bde1f90ae4863"]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedPhotos, setSelectedPhotos] = useState<{ file: File, color: string }[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
-  const [stock, setStock] = useState<number>();
   const [description, setDescription] = useState<string>('');
   const [price, setPrice] = useState<number>();
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<number>();
-  const [stocks, setStocks] = useState<{color: string, size: string, stock: number}[]>([]);
+  const [stocks, setStocks] = useState<{color: string, size: number | undefined, stock: number}[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
 
   const getCategories = async () => {
@@ -25,10 +25,69 @@ const Add: React.FC = () => {
     const data = await response.json();
     return data;
   }
+  
+  interface ProductData {
+    title: string;
+    description: string;
+    currentPrice?: number;
+    categories: string[];
+    selectedColors: string[];
+    selectedSizes: number[];
+    stock: string;
+    colors: string[];
+    sizes: number[];
+    photosColors: string;
+  }
+  
+  const postProduct = async () => {
+    const productData: ProductData = {
+      title: productName,
+      description: description,
+      currentPrice: price,
+      categories: selectedCategories,
+      selectedColors: selectedColors,
+      selectedSizes: selectedSizes,
+      stock: JSON.stringify(stocks),
+      colors: selectedColors,
+      sizes: selectedSizes,
+      photosColors: JSON.stringify(selectedPhotos)
+    };
+  
+    const formData = new FormData();
+  
+    selectedPhotos.forEach(photo => {
+      formData.append('files', photo.file);
+    });
+
+    for (const [key, value] of Object.entries(productData)) {
+      formData.append(key, String(value));
+    }
+  
+    try {
+      const response = await axios.post('http://localhost:3333/products/add', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   useEffect(() => {
     getCategories().then((data) => setCategories(data));
   }, [])
+
+  const getStockForSelectedColorAndSize = () => {
+    if (selectedColor && selectedSize) {
+      const stockForSelected = stocks.find(
+        (item) => item.color === selectedColor && item.size === selectedSize
+      );
+      return stockForSelected ? stockForSelected.stock : 0;
+    }
+    return 0;
+  };
 
   const handleAddColor = (color: string) => {
     if (selectedColors.includes(color)) {
@@ -52,9 +111,11 @@ const Add: React.FC = () => {
 
   const handleSelectSize = (size: number) => () => {
     setSelectedSize(size);
-  }
+  };
 
   const handleSelectCategory = (category: string) => () => {
+    console.log(category)
+
     setSelectedCategories([...selectedCategories, category]);
   }
 
@@ -67,14 +128,28 @@ const Add: React.FC = () => {
       setSelectedPhotos([...selectedPhotos, ...newPhotos]);
     }
   };
+
+  const handleSetStocks = (stock: number) => {
+    const item = stocks.find(item => item.color === selectedColor && item.size === selectedSize);
+
+    if(item) {
+      item.stock = stock;
+      setStocks([...stocks]);
+      return;
+    }
+
+    setStocks([...stocks, {color: selectedColor, size: selectedSize, stock: stock}])
+  }
   
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    postProduct();
   };
 
   return (
-    <div className='flex justify-center mt-16 w-full text-lg font-medium'>
+    <div className='flex justify-center mt-16 mb-16 w-full text-lg font-medium'>
       <form className='w-full px-48 flex flex-col gap-2' onSubmit={handleSubmit}>
         <div className='flex flex-col'>
           <label>Product Name</label>
@@ -82,10 +157,10 @@ const Add: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           <label>Category</label>
-          <select onChange={(e) => handleSelectCategory(e.target.value)} value={"Add New Category"} className='bg-slate-300 p-2 rounded-lg text-slate-400' required>
+          <select onChange={(e) => handleSelectCategory(e.target.value)} className='bg-slate-300 p-2 rounded-lg text-slate-400' required>
             <option value="">Add New Category</option>
             {categories.map((category, index) => 
-              <option key={index} value={category.title}>{category.title}</option>
+              <option key={index} value={category._id}>{category.title}</option>
             )}
           </select>
         </div>
@@ -95,7 +170,6 @@ const Add: React.FC = () => {
                 <div key={index} className='bg-slate-300 p-2 rounded-lg text-slate-400'>{category}</div>
               )}
         </div>
-
 
         <div className='flex flex-col'>
           <label>Colors</label>
@@ -170,7 +244,7 @@ const Add: React.FC = () => {
 
         <div className='flex flex-col'>
           <label>{`Stock${selectedColor && selectedSize ? ` For ${selectedColor} ${selectedSize}` : ""}`}</label>
-          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size First" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-slate-300 p-2 rounded-lg placeholder-slate-400' type="number" value={stock} onChange={(e) => setStock(parseInt(e.target.value, 10))} required />
+          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size First" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-slate-300 p-2 rounded-lg placeholder-slate-400' type="number" value={getStockForSelectedColorAndSize()} onChange={(e) => handleSetStocks(Number(e.target.value))} required />
         </div>
         <div className='flex flex-col'>
           <label>Description</label>
