@@ -9,7 +9,7 @@ import axios from 'axios';
 
 const Add: React.FC = () => {
   const [productName, setProductName] = useState<string>('');
-  const [selectedCategories, setSelectedCategories] = useState<string[]>(["64b5e125d19bde1f90ae4863"]);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedColors, setSelectedColors] = useState<string[]>([]);
   const [selectedPhotos, setSelectedPhotos] = useState<{ file: File, color: string }[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<number[]>([]);
@@ -17,14 +17,17 @@ const Add: React.FC = () => {
   const [price, setPrice] = useState<number>();
   const [selectedColor, setSelectedColor] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<number>();
-  const [stocks, setStocks] = useState<{color: string, size: number | undefined, stock: number}[]>([]);
+  const [stocks, setStocks] = useState<{color: string, size: number | undefined, quantity: number}[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
 
   const getCategories = async () => {
-    const response = await fetch('http://localhost:3333/categories');
-    const data = await response.json();
-    return data;
-  }
+    try {
+      const response = await axios.get('http://localhost:3333/categories');
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  };  
   
   interface ProductData {
     title: string;
@@ -74,7 +77,6 @@ const Add: React.FC = () => {
     }
   };
   
-
   useEffect(() => {
     getCategories().then((data) => setCategories(data));
   }, [])
@@ -84,9 +86,9 @@ const Add: React.FC = () => {
       const stockForSelected = stocks.find(
         (item) => item.color === selectedColor && item.size === selectedSize
       );
-      return stockForSelected ? stockForSelected.stock : 0;
+      return stockForSelected ? stockForSelected.quantity : "";
     }
-    return 0;
+    return "";
   };
 
   const handleAddColor = (color: string) => {
@@ -113,8 +115,10 @@ const Add: React.FC = () => {
     setSelectedSize(size);
   };
 
-  const handleSelectCategory = (category: string) => () => {
-    console.log(category)
+  const handleAddCategory = (category: string) => {
+    if (selectedCategories.includes(category)) {
+      return;
+    }
 
     setSelectedCategories([...selectedCategories, category]);
   }
@@ -133,12 +137,12 @@ const Add: React.FC = () => {
     const item = stocks.find(item => item.color === selectedColor && item.size === selectedSize);
 
     if(item) {
-      item.stock = stock;
+      item.quantity = stock;
       setStocks([...stocks]);
       return;
     }
 
-    setStocks([...stocks, {color: selectedColor, size: selectedSize, stock: stock}])
+    setStocks([...stocks, {color: selectedColor, size: selectedSize, quantity: stock}])
   }
   
 
@@ -157,7 +161,7 @@ const Add: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           <label>Category</label>
-          <select onChange={(e) => handleSelectCategory(e.target.value)} className='bg-slate-300 p-2 rounded-lg text-slate-400' required>
+          <select onChange={(e) => handleAddCategory(e.target.value)} className='bg-slate-300 p-2 rounded-lg text-slate-400' value={"Add New Color"}>
             <option value="">Add New Category</option>
             {categories.map((category, index) => 
               <option key={index} value={category._id}>{category.title}</option>
@@ -167,7 +171,8 @@ const Add: React.FC = () => {
 
         <div className='flex'>
               {selectedCategories.map((category, index) =>
-                <div key={index} className='bg-slate-300 p-2 rounded-lg text-slate-400'>{category}</div>
+                <div key={index} className='bg-slate-300 p-2 rounded-lg text-slate-400'>{categories.filter((categ) => categ._id === category).map((categ) => categ.title)
+                }</div>
               )}
         </div>
 
