@@ -1,9 +1,27 @@
-import React from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import {FaSearch, FaPlus } from 'react-icons/fa'
 import ProductPreview from '../components/ProductPreview'
 import Link from 'next/link'
+import axios from 'axios'
 
 const Products = () => {
+    const [products, setProducts] = useState<[]>([]);
+
+    const getProducts = async () => {
+        try {
+            const response = await axios.get('http://localhost:3333/products');
+            setProducts(response.data);
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    useEffect(() => {
+        getProducts();
+    }, [])
+
     return (
         <div className='flex flex-col items-center px-64 w-full relative'>
             <div className='flex gap-2 items-center bottom-8 right-64 absolute'>
@@ -23,7 +41,17 @@ const Products = () => {
             </div>
 
             <div className='flex flex-col mt-8 w-full max-h-[700px] overflow-auto'>
-                <ProductPreview
+                {products.map((product: any) => {
+                    return (
+                        <ProductPreview
+                            key={product._id}
+                            name={product.title}
+                            category={product.category}
+                            image={product.images[0].src}
+                        />
+                    )
+                })}
+                {/* <ProductPreview
                     name='Product Name'
                     category='Category'
                     image='https://images.unsplash.com/photo-1491553895911-0055eca6402d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80'
@@ -37,7 +65,7 @@ const Products = () => {
                     name='Product Name'
                     category='Category'
                     image='https://images.unsplash.com/photo-1491553895911-0055eca6402d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=880&q=80'
-                />
+                /> */}
             </div>
         </div>
     )
