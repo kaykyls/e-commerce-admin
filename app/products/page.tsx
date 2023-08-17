@@ -14,7 +14,7 @@ const Products = () => {
             const response = await axios.get('http://localhost:3333/products');
             setProducts(response.data);
         } catch (error) {
-            throw error;
+            console.log(error);
         }
     }
 
@@ -32,11 +32,11 @@ const Products = () => {
             </div>
             
             <div className='flex flex-col items-center mt-16 w-full'>
-                <div className='flex bg-slate-300 items-center rounded-lg text-lg font-medium w-full'>
+                <div className='flex bg-white items-center rounded-lg text-lg font-medium w-full'>
                     <label className='p-4' htmlFor='product-search'>
                         <FaSearch/>
                     </label>
-                    <input id='product-search' className='bg-slate-300 w-full py-4 outline-none rounded-lg placeholder:text-slate-400' type="text" placeholder='Search...'/>
+                    <input id='product-search' className='bg-white w-full py-4 outline-none rounded-lg placeholder:text-slate-400' type="text" placeholder='Search...'/>
                 </div>
             </div>
 
