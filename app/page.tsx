@@ -2,7 +2,7 @@ import DashboardCard from './components/DashboardCard'
 
 export default function Home() {
   return (
-      <div className='flex gap-4 justify-center px-16 mt-16 w-full relative'>
+      <div className='flex justify-between gap-4 px-8 mt-16 w-full relative'>
         <DashboardCard
           title='Orders'
           info='345'

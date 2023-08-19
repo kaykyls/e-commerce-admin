@@ -179,15 +179,15 @@ const Add: React.FC = () => {
   return (
     <div className='flex justify-center mt-16 mb-16 w-full text-lg font-medium'>
       {modalIsOpen && <Modal message={modalMessage} setModalIsOpen={setModalIsOpen}/>}
-      <form className='w-full px-48 flex flex-col gap-2' onSubmit={handleSubmit}>
-        {!isAuthenticated && <span className='text-red-600 border-b border-slate-300'>You are not authenticated. This is preview only.</span>}
+      <form className='w-full px-32 flex flex-col gap-2' onSubmit={handleSubmit}>
+        {!isAuthenticated && <span className='text-red-600 border-b border-dark-gray'>You are not authenticated. This is preview only.</span>}
         <div className='flex flex-col'>
           <label>Product Name</label>
-          <input className='bg-white p-2 rounded-lg placeholder-slate-300' placeholder='Product Name' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} required />
+          <input className='bg-white p-2 rounded-lg placeholder-dark-gray' placeholder='Product Name' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} required />
         </div>
         <div className='flex flex-col'>
           <label>Category</label>
-          <select onChange={(e) => handleAddCategory(e.target.value)} className='bg-white p-2 rounded-lg text-slate-300' value={"Add New Color"}>
+          <select onChange={(e) => handleAddCategory(e.target.value)} className='bg-white p-2 rounded-lg text-dark-gray' value={"Add New Color"}>
             <option value="">Add New Category</option>
             {categories.map((category, index) => 
               <option key={index} value={category._id}>{category.title}</option>
@@ -197,14 +197,14 @@ const Add: React.FC = () => {
 
         <div className='flex'>
               {selectedCategories.map((category, index) =>
-                <div key={index} className='bg-white p-2 rounded-lg text-slate-300'>{categories.filter((categ) => categ._id === category).map((categ) => categ.title)
+                <div key={index} className='bg-white p-2 rounded-lg text-dark-gray'>{categories.filter((categ) => categ._id === category).map((categ) => categ.title)
                 }</div>
               )}
         </div>
 
         <div className='flex flex-col'>
           <label>Colors</label>
-          <select onChange={(e) => handleAddColor(e.target.value)} className='bg-white p-2 rounded-lg text-slate-300' value={"Add New Color"}>
+          <select onChange={(e) => handleAddColor(e.target.value)} className='bg-white p-2 rounded-lg text-dark-gray' value={"Add New Color"}>
             <option value="">Add New Color</option>
             <option className='text-slate-900' value="Red">Red</option>
             <option className='text-slate-900' value="Blue">Blue</option>
@@ -236,7 +236,7 @@ const Add: React.FC = () => {
                   height="160"
                 />
               ))}
-            <label className={` ${selectedColor ? "cursor-pointer" : "cursor-not-allowed"} bg-white w-40 h-40 flex flex-col items-center justify-center rounded-lg text-slate-300`} htmlFor="image-input">
+            <label className={` ${selectedColor ? "cursor-pointer" : "cursor-not-allowed"} bg-white w-40 h-40 flex flex-col items-center justify-center rounded-lg text-dark-gray`} htmlFor="image-input">
               <GoUpload className='w-6 h-6'/>
               <span>{selectedColor ? "Upload Image" : `Select Color First`}</span>
             </label>
@@ -248,7 +248,7 @@ const Add: React.FC = () => {
         </div>
         <div className='flex flex-col'>
           <label>Sizes</label>
-          <select value={"Add New Size"} className='bg-white p-2 rounded-lg text-slate-300' onChange={(e => handleAddSize(Number(e.target.value)))}>
+          <select value={"Add New Size"} className='bg-white p-2 rounded-lg text-dark-gray' onChange={(e => handleAddSize(Number(e.target.value)))}>
             <option value="">Add New Size</option>
             <option value="35">35</option>
             <option value="36">36</option>
@@ -275,15 +275,15 @@ const Add: React.FC = () => {
 
         <div className='flex flex-col'>
           <label>{`Stock${selectedColor && selectedSize ? ` For ${selectedColor} ${selectedSize}` : ""}`}</label>
-          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size First" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-white p-2 rounded-lg placeholder-slate-300' type="number" value={getStockForSelectedColorAndSize()} onChange={(e) => handleSetStocks(Number(e.target.value))} required />
+          <input disabled={!selectedColor || !selectedSize} placeholder={!selectedColor || !selectedSize ? "Select Color And Size First" : `Stock For ${selectedColor} ${selectedSize}`} className='bg-white p-2 rounded-lg placeholder-dark-gray' type="number" value={getStockForSelectedColorAndSize()} onChange={(e) => handleSetStocks(Number(e.target.value))} required />
         </div>
         <div className='flex flex-col'>
           <label>Description</label>
-          <textarea placeholder='Description' className='bg-white placeholder-slate-300 p-2 rounded-lg' value={description} onChange={(e) => setDescription(e.target.value)} required />
+          <textarea placeholder='Description' className='bg-white placeholder-dark-gray p-2 rounded-lg' value={description} onChange={(e) => setDescription(e.target.value)} required />
         </div>
         <div className='flex flex-col'>
           <label>Price</label>
-          <input placeholder='Price' className='placeholder-slate-300 bg-white p-2 rounded-lg' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
+          <input placeholder='Price' className='placeholder-dark-gray bg-white p-2 rounded-lg' type="number" value={price} onChange={(e) => setPrice(parseFloat(e.target.value))} required />
         </div>
         <div className='flex justify-end items-center gap-2 mt-4'>
           <span>Finish</span>

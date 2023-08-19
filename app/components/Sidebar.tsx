@@ -9,9 +9,10 @@ import {IoSettingsOutline} from 'react-icons/io5'
 import {GiConverseShoe} from 'react-icons/gi'
 import Link from 'next/link'
 
+
 const Sidebar = () => {
     return (
-        <div className='fixed top-0 left-0 h-screen w-80 bg-white text-gray-800 m-0 flex flex-col gap-12'>
+        <div className='fixed top-0 left-0 h-screen w-72 bg-white text-gray-800 m-0 flex flex-col gap-12  border-r border-medium-gray'>
             <Link href={"/"} className='flex text-3xl items-center font-medium px-10 py-4 gap-1'>
                 <GiConverseShoe/>
                 <span className='drop-shadow-md'>Shoes</span>
@@ -49,9 +50,6 @@ const Sidebar = () => {
                         href='/settings'
                     />
                 </div>
-                {/* <div className=''>
-                    <span>Dark Mode</span>
-                </div> */}
             </div> 
         </div>
     )

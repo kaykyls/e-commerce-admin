@@ -11,14 +11,14 @@ interface ProductPreviewProps {
 
 const ProductPreview:React.FC<ProductPreviewProps> = ({name, category, image}: ProductPreviewProps) => {
     return (
-        <div className='flex hover:bg-slate-300 transition-colors cursor-pointer rounded-lg p-4 gap-4'>
+        <div className='flex hover:bg-slate-300 transition-colors cursor-pointer rounded-lg p-4 gap-8'>
 
             <Image
                 src={image}
-                width={150}
-                height={150}
+                width={100}
+                height={100}
                 alt='product image'
-                style={{borderRadius: '.5rem', objectFit: 'cover', width: '150px', height: '150px'}}
+                style={{borderRadius: '.5rem', objectFit: 'cover', width: '100px', height: '100px'}}
             />
 
             <div className='flex flex-col justify-end'>

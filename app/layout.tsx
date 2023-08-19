@@ -18,7 +18,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Sidebar />
-        <div className='flex left-80 w-[calc(100%-320px)] relative bg-light-gray min-h-screen'>
+        <div className='flex left-72 w-[calc(100%-288px)] relative bg-light-gray min-h-screen'>
           {children}
         </div>
       </body>
