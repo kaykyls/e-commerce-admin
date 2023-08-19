@@ -2,7 +2,7 @@ import React from 'react'
 import { FaChevronRight } from 'react-icons/fa'
 import Link from 'next/link'
 
-const page = () => {
+const Settings = () => {
     return (
         <div className='px-32 w-full mt-16'>
             <div className='flex flex-col text-xl'>
@@ -22,4 +22,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Settings

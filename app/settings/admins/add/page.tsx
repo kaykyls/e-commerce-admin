@@ -5,7 +5,7 @@ import { GoArrowLeft } from 'react-icons/go'
 import Link from 'next/link'
 import axios from 'axios'
 
-const page = () => {
+const AddAdmin = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -69,4 +69,4 @@ const page = () => {
     )
 }
 
-export default page
+export default AddAdmin
