@@ -20,7 +20,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Panel children={children}/>
+        <Panel>
+          {children}
+        </Panel>
       </body>
     </html>
   )
