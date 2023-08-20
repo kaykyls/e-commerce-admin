@@ -1,10 +1,8 @@
-"use client"
-
 import './globals.css'
 import { Inter } from 'next/font/google'
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
-import { usePathname } from 'next/navigation'
+import Panel from './components/Panel'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,22 +16,11 @@ export default function RootLayout({
 }: {
   children: React.ReactNode
 }) {
-  const pathname = usePathname()
  
   return (
     <html lang="en">
       <body className={inter.className}>
-        {pathname === '/login' ? (
-          children
-        ) : (
-          <>
-            <Sidebar />
-            <div className='flex flex-col left-72 w-[calc(100%-288px)] relative bg-light-gray min-h-screen'>
-              <Navbar />
-              {children}
-            </div>
-          </>
-        )}
+        <Panel children={children}/>
       </body>
     </html>
   )
