@@ -44,7 +44,7 @@ const Products = () => {
                 </div>
             </div>
 
-            <div className='flex flex-col mt-8 w-full max-h-[700px] overflow-auto'>
+            <div className='flex flex-col mt-8 w-full max-h-[600px] overflow-auto'>
                 {products.map((product: any) => {
                     return (
                         <ProductPreview

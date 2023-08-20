@@ -19,7 +19,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({title, icon, href}) => {
     }, [pathname])
 
     return (
-        <Link href={href} className={`${!isActive ? "text-dark-gray font-normal" : "text-black font-medium"} flex items-center text-xl px-10 py-4 gap-5`}>
+        <Link href={href} className={`${!isActive ? "text-dark-gray font-normal" : "text-black font-medium"} hover:bg-gray-100 hover:rounded-full mx-5  flex items-center text-xl px-5 py-4 gap-5`}>
             <div className='text-3xl'>
                 {icon}
             </div>
