@@ -33,7 +33,7 @@ const AddAdmin = () => {
     };
 
     return (
-        <div className='mt-16 px-32 w-full'>
+        <div className='px-32 w-full'>
             <div className='flex items-center'>
                 <Link href={"/settings"}>
                     <GoArrowLeft className='text-2xl' />

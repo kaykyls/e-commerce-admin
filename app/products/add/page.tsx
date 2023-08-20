@@ -7,6 +7,8 @@ import { FiCheck } from 'react-icons/fi';
 import Image from 'next/image';
 import axios from 'axios';
 import Modal from '../../components/Modal';
+import Link from 'next/link';
+import { GoArrowLeft } from 'react-icons/go';
 
 const Add: React.FC = () => {
   const [productName, setProductName] = useState<string>('');
@@ -177,10 +179,16 @@ const Add: React.FC = () => {
   };
 
   return (
-    <div className='flex justify-center mt-16 mb-16 w-full text-lg font-medium'>
+    <div className='flex flex-col px-32 justify-center mb-16 w-full text-lg'>
       {modalIsOpen && <Modal message={modalMessage} setModalIsOpen={setModalIsOpen}/>}
-      <form className='w-full px-32 flex flex-col gap-2' onSubmit={handleSubmit}>
-        {!isAuthenticated && <span className='text-red-600 border-b border-dark-gray'>You are not authenticated. This is preview only.</span>}
+      <div className='mb-4 flex items-center'>
+        <Link href={"/products"}>
+          <GoArrowLeft className='text-2xl' />
+        </Link>
+        <span className='text-2xl ml-8'>Add New Product</span>
+      </div>
+      <form className='w-full flex flex-col gap-2' onSubmit={handleSubmit}>
+        {!isAuthenticated && <span className='text-red-600 border-b border-medium-gray'>You are not authenticated. This is preview only.</span>}
         <div className='flex flex-col'>
           <label>Product Name</label>
           <input className='bg-white p-2 rounded-lg placeholder-dark-gray' placeholder='Product Name' type="text" value={productName} onChange={(e) => setProductName(e.target.value)} required />
