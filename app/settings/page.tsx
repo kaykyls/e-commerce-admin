@@ -11,7 +11,7 @@ const Settings = () => {
             <div className='flex flex-col text-xl mb-8'>
                 <span className='mb-4'>Account</span>
                 <div className='flex flex-col gap-2'>
-                    <Link href={"/settings/account"} className='bg-white cursor-pointer p-4 rounded-lg flex justify-between items-center'>
+                    <Link href={"/login"} className='bg-white cursor-pointer p-4 rounded-lg flex justify-between items-center'>
                         <span className='text-dark-gray'>Login</span>
                         <FaChevronRight/>
                     </Link>
