@@ -48,10 +48,10 @@ const Products = () => {
                 {products.map((product: any) => {
                     return (
                         <ProductPreview
-                            key={product._id}
-                            name={product.title}
-                            category={product.category}
-                            image={product.images[0].src}
+                            key={product?._id}
+                            name={product?.title}
+                            category={product?.categories[0]}
+                            image={product?.images[0].src}
                         />
                     )
                 })}

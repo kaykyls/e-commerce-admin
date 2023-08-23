@@ -10,6 +10,29 @@ interface ProductPreviewProps {
 }
 
 const ProductPreview:React.FC<ProductPreviewProps> = ({name, category, image}: ProductPreviewProps) => {
+    const [categoryName, setCategoryName] = useState<string>('');
+
+    const getCategoryName = async (id: string) => {
+        try {
+            const response = await axios.get(`http://localhost:3333/categories/${id}`);
+            console.log(response.data.title);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    
+    useEffect(() => {
+        getCategoryName(category)
+            .then(categoryData => {
+                setCategoryName(categoryData.title);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
+    
+
     return (
         <div className='flex hover:bg-slate-300 transition-colors cursor-pointer rounded-lg p-4 gap-8'>
             <Image
@@ -21,8 +44,8 @@ const ProductPreview:React.FC<ProductPreviewProps> = ({name, category, image}: P
             />
 
             <div className='flex flex-col justify-end'>
-                <span className='font-medium text-gray-400 text-lg'>{category}</span>
-                <span className='font-medium text-gray-700 text-2xl'>{name}</span>
+                <span className='font-medium text-gray-400 text-sm'>{categoryName}</span>
+                <span className='font-medium text-gray-700 text-xl'>{name}</span>
             </div>
             <div className='flex ms-auto items-end text-2xl gap-1'>
                 <div className='p-2 rounded-lg bg-white'>
