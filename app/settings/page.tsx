@@ -11,7 +11,7 @@ const Settings = () => {
             <div className='flex flex-col text-xl mb-8'>
                 <span className='mb-4'>Account</span>
                 <div className='flex flex-col gap-2'>
-                    <Link href={"/login"} className='bg-white cursor-pointer p-4 rounded-lg flex justify-between items-center'>
+                    <Link href={"/login"} className='bg-white cursor-pointer text-base p-4 rounded-lg flex justify-between items-center'>
                         <span className='text-dark-gray'>Login</span>
                         <FaChevronRight/>
                     </Link>
@@ -20,11 +20,11 @@ const Settings = () => {
             <div className='flex flex-col text-xl'>
                 <span className='mb-4'>Admins</span>
                 <div className='flex flex-col gap-2'>
-                    <Link href={"/settings/admins"} className='bg-white cursor-pointer p-4 rounded-lg flex justify-between items-center'>
+                    <Link href={"/settings/admins"} className='bg-white cursor-pointer text-base p-4 rounded-lg flex justify-between items-center'>
                         <span className='text-dark-gray'>See All Admins</span>
                         <FaChevronRight/>
                     </Link>
-                    <Link href={"/settings/admins/add"} className='bg-white cursor-pointer p-4 rounded-lg flex justify-between items-center'>
+                    <Link href={"/settings/admins/add"} className='bg-white cursor-pointer text-base p-4 rounded-lg flex justify-between items-center'>
                         <span className=' text-dark-gray'>Add New Admin</span>
                         <FaChevronRight/>
                     </Link>
