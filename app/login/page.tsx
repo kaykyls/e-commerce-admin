@@ -3,10 +3,59 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import axios from 'axios'
+import Cookies from 'universal-cookie'
+import jwt from 'jwt-decode'
+import { useSelector, useDispatch } from 'react-redux'
+import { setUser } from '../redux/userSlice'
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const cookies = new Cookies();
+
+  const refreshToken = async () => {
+    try {
+      const res = await axios.post("http://localhost:3333/admin/auth/refresh", { token: cookies.get("refreshToken") });
+
+      console.log(res.data);
+
+      const token = res.data.token;
+      const decoded: any = jwt(token);
+
+      const refreshToken = res.data.refreshToken;
+      const decodedRefresh: any = jwt(refreshToken);
+
+      cookies.set('token', token, { expires: new Date(decoded.exp * 1000) });
+      cookies.set('refreshToken', refreshToken, { expires: new Date(decodedRefresh.exp * 1000) });
+
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const axiosJWT = axios.create()
+
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      // console.log("interceptor");
+      if (cookies.get("token") === undefined) {
+        // console.log("token expired");
+        const data = await refreshToken();
+        config.headers["authorization"] = "Bearer " + data.token;
+      }
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
+
+  // const user = useSelector((state: any) => state.user);
+
+  const dispatch = useDispatch();
 
   const handleChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -27,11 +76,39 @@ const Login = () => {
         'http://localhost:3333/admin/auth/login',
         formData
       );
-      console.log('Login successful:', response.data);
+
+      const token = response.data.token;
+      const decoded: any = jwt(token);
+
+      const refreshToken = response.data.refreshToken;
+      const decodedRefresh: any = jwt(refreshToken);
+
+      cookies.set('token', token, { expires: new Date(decoded.exp * 1000) });
+      cookies.set('refreshToken', refreshToken, { expires: new Date(decodedRefresh.exp * 1000) });
+
+      dispatch(setUser(response.data.user))
     } catch (error) {
       console.error('Login failed:', error);
     }
   };
+
+  const logout = () => {
+    cookies.remove('token');
+    cookies.remove('refreshToken');
+  };
+
+  const teste = async () => {
+    try {
+      const response = await axiosJWT.get('http://localhost:3333/admin/64fe54808c593a3fb0781c13', {
+        headers: {
+          Authorization: `Bearer ${cookies.get('token')}`,
+        },
+      });
+      console.log('User:', response.data);
+    } catch (error) {
+      console.error('User:', error);
+    }
+  }
 
   return (
     <div className='h-screen flex items-center justify-center bg-light-gray'>
@@ -80,6 +157,7 @@ const Login = () => {
           </div>
         </form> 
       </div>
+      <button onClick={teste}>teste</button>
     </div>
   )
 }

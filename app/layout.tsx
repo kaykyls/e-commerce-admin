@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import Sidebar from './components/Sidebar'
 import Navbar from './components/Navbar'
 import Panel from './components/Panel'
+import { Providers } from './redux/Provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,9 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Panel>
-          {children}
-        </Panel>
+        <Providers>
+          <Panel>
+            {children}
+          </Panel>
+        </Providers>
       </body>
     </html>
   )

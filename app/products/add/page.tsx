@@ -9,6 +9,7 @@ import axios from 'axios';
 import Modal from '../../components/Modal';
 import Link from 'next/link';
 import { GoArrowLeft } from 'react-icons/go';
+import Cookies from 'universal-cookie'
 
 const Add: React.FC = () => {
   const [productName, setProductName] = useState<string>('');
@@ -26,14 +27,8 @@ const Add: React.FC = () => {
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
   const [modalMessage, setModalMessage] = useState<string>("");
   const [isUploading, setIsUploading] = useState<boolean>(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if(token) {
-      setIsAuthenticated(true);
-    }
-  }, [])
+  
+  const cookies = new Cookies();
 
   const getCategories = async () => {
     try {
@@ -84,9 +79,10 @@ const Add: React.FC = () => {
     }
   
     try {
-      const response = await axios.post('http://localhost:3333/products/add', formData, {
+      await axios.post('http://localhost:3333/products/add', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${cookies.get('token')}`
         },
       });
 
