@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie'
 import jwt from 'jwt-decode'
 import { useSelector, useDispatch } from 'react-redux'
 import { setUser } from '../redux/userSlice'
-
+import { refreshToken, axiosJWT, logout } from '../auth'
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -15,43 +15,43 @@ const Login = () => {
 
   const cookies = new Cookies();
 
-  const refreshToken = async () => {
-    try {
-      const res = await axios.post("http://localhost:3333/admin/auth/refresh", { token: cookies.get("refreshToken") });
+  // const refreshToken = async () => {
+  //   try {
+  //     const res = await axios.post("http://localhost:3333/admin/auth/refresh", { token: cookies.get("refreshToken") });
 
-      console.log(res.data);
+  //     console.log(res.data);
 
-      const token = res.data.token;
-      const decoded: any = jwt(token);
+  //     const token = res.data.token;
+  //     const decoded: any = jwt(token);
 
-      const refreshToken = res.data.refreshToken;
-      const decodedRefresh: any = jwt(refreshToken);
+  //     const refreshToken = res.data.refreshToken;
+  //     const decodedRefresh: any = jwt(refreshToken);
 
-      cookies.set('token', token, { expires: new Date(decoded.exp * 1000) });
-      cookies.set('refreshToken', refreshToken, { expires: new Date(decodedRefresh.exp * 1000) });
+  //     cookies.set('token', token, { expires: new Date(decoded.exp * 1000) });
+  //     cookies.set('refreshToken', refreshToken, { expires: new Date(decodedRefresh.exp * 1000) });
 
-      return res.data;
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  //     return res.data;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
-  const axiosJWT = axios.create()
+  // const axiosJWT = axios.create()
 
-  axiosJWT.interceptors.request.use(
-    async (config) => {
-      // console.log("interceptor");
-      if (cookies.get("token") === undefined) {
-        // console.log("token expired");
-        const data = await refreshToken();
-        config.headers["authorization"] = "Bearer " + data.token;
-      }
-      return config;
-    },
-    (error) => {
-      return Promise.reject(error);
-    }
-  );
+  // axiosJWT.interceptors.request.use(
+  //   async (config) => {
+  //     // console.log("interceptor");
+  //     if (cookies.get("token") === undefined) {
+  //       // console.log("token expired");
+  //       const data = await refreshToken();
+  //       config.headers["authorization"] = "Bearer " + data.token;
+  //     }
+  //     return config;
+  //   },
+  //   (error) => {
+  //     return Promise.reject(error);
+  //   }
+  // );
 
   // const user = useSelector((state: any) => state.user);
 
@@ -90,11 +90,6 @@ const Login = () => {
     } catch (error) {
       console.error('Login failed:', error);
     }
-  };
-
-  const logout = () => {
-    cookies.remove('token');
-    cookies.remove('refreshToken');
   };
 
   const teste = async () => {
@@ -158,6 +153,7 @@ const Login = () => {
         </form> 
       </div>
       <button onClick={teste}>teste</button>
+      <button onClick={logout}>logout</button>
     </div>
   )
 }
