@@ -46,9 +46,10 @@ export const refreshToken = async () => {
 }
 
 export const logout = async () => {
-    store.dispatch(setUser(null));
+    const refreshToken = cookies.get('refreshToken');
+
     try {
-        const response = await axiosJWT.get('http://localhost:3333/admin/logout', {
+        await axiosJWT.post('http://localhost:3333/admin/auth/logout', { refreshToken }, {
             headers: {
                 Authorization: `Bearer ${cookies.get('token')}`,
             },
