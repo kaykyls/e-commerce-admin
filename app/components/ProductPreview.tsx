@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { FaEdit, FaTrashAlt} from 'react-icons/fa'
 import axios from 'axios'
+import Link from 'next/link'
 
 interface ProductPreviewProps {
+    id: string
     name: string
     category: string
     image: string
 }
 
-const ProductPreview:React.FC<ProductPreviewProps> = ({name, category, image}: ProductPreviewProps) => {
+const ProductPreview:React.FC<ProductPreviewProps> = ({id, name, category, image}: ProductPreviewProps) => {
     const [categoryName, setCategoryName] = useState<string>('');
 
     const getCategoryName = async (id: string) => {
@@ -34,7 +36,7 @@ const ProductPreview:React.FC<ProductPreviewProps> = ({name, category, image}: P
     
 
     return (
-        <div className='flex hover:bg-slate-300 transition-colors cursor-pointer rounded-lg p-4 gap-8'>
+        <Link href={`/products/${id}`} className='flex hover:bg-slate-300 transition-colors cursor-pointer rounded-lg p-4 gap-8'>
             <Image
                 src={image}
                 width={100}
@@ -59,7 +61,7 @@ const ProductPreview:React.FC<ProductPreviewProps> = ({name, category, image}: P
                     </svg>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
 

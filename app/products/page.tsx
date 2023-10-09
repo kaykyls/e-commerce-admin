@@ -49,6 +49,7 @@ const Products = () => {
                     return (
                         <ProductPreview
                             key={product?._id}
+                            id={product?._id}
                             name={product?.title}
                             category={product?.categories[0]}
                             image={product?.images[0].src}

@@ -30,6 +30,12 @@ const Add: React.FC = () => {
   
   const cookies = new Cookies();
 
+  useEffect(() =>{
+    if(cookies.get('token')) {
+      setIsAuthenticated(true);
+    }
+  }, [])
+
   const getCategories = async () => {
     try {
       const response = await axios.get('http://localhost:3333/categories');
