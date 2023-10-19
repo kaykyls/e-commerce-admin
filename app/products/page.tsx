@@ -26,7 +26,7 @@ const Products = () => {
         <div className='flex flex-col px-32 w-full relative flex-1'>
             <div className='flex gap-2 items-center bottom-8 right-32 absolute'>
                 <span className='font-medium text-2xl'>Add New Product</span>
-                <Link href={"/products/add"} className='p-6 bg-blue-700 rounded-full shadow-lg transition-colors text-white cursor-pointer hover:bg-blue-800'>
+                <Link href={"/products/add"} className='w-14 h-14 flex items-center justify-center bg-blue-700 rounded-full shadow-lg transition-colors text-white cursor-pointer hover:bg-blue-800'>
                     <FaPlus/>
                 </Link>
             </div>
