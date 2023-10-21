@@ -26,7 +26,7 @@ interface Product {
     }[]
 }
 
-const page = () => {
+const Edit = () => {
     const { id } = useParams();
 
     const [product, setProduct] = useState<Product>();
@@ -94,4 +94,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Edit
