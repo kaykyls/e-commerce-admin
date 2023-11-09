@@ -42,9 +42,17 @@ const Product = () => {
     const [product, setProduct] = useState<Product>();
     const [selectedColor, setSelectedColor] = useState<string | null>(null);
     const [selectedSize, setSelectedSize] = useState<number | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
 
     useEffect(() => {
         getProduct();
+        getCategories()
+            .then(categoriesData => {
+                setCategories(categoriesData);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }, [])
 
     const handleSelectedColor = (color: string) => {
@@ -93,7 +101,7 @@ const Product = () => {
                     <span>Category</span>
                     <div>
                     {product?.categories.map((category, index) =>
-                            <span className='bg-white px-4 py-2 rounded-lg text-dark-gray' key={index}>{category}</span>
+                            <span className='bg-white px-4 py-2 rounded-lg text-dark-gray' key={index}>{categories.filter((categ) => categ._id === category).map((categ) => categ.title)}</span>
                         )}
                     </div>
                 </div>
