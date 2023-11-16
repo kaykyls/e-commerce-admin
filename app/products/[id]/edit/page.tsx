@@ -105,8 +105,16 @@ const Edit = () => {
 
     const handleSetStocks = (quantity: number) => {
         if (selectedColor && selectedSize) {
-            const stock = product?.stock.find(stock => stock.color === selectedColor && stock.size === selectedSize);
-            stock!.quantity = quantity;
+            const newStock = product?.stock.map(stock => {
+                if (stock.color === selectedColor && stock.size === selectedSize) {
+                    return {
+                        ...stock,
+                        quantity
+                    }
+                }
+                return stock;
+            });
+            setProduct(product => ({...product, stock: newStock!}));
         }
     }
 
@@ -158,31 +166,20 @@ const Edit = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         setIsUploading(true);
 
-        const formData = new FormData();
-        formData.append('title', product.title);
-        formData.append('description', product.description);
-        formData.append('currentPrice', String(product.currentPrice));
-        formData.append('colors', JSON.stringify(product.colors));
-        formData.append('categories', JSON.stringify(product.categories));
-        formData.append('sizes', JSON.stringify(product.sizes));
-        formData.append('stock', JSON.stringify(product.stock));
-        formData.append('images', JSON.stringify(product.images));
-
-        selectedPhotos.forEach((photo) => {
-            formData.append('photos', photo.file);
-        });
-
         try {
-            const response = await axios.put(`http://localhost:3333/products/${id}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
+            const response = await axios.put(`http://localhost:3333/products/${id}/edit`, {
+                title: product.title,
+                description: product.description,
+                currentPrice: product.currentPrice,
+                colors: product.colors,
+                categories: product.categories,
+                sizes: product.sizes,
+                stock: product.stock,
+                images: product.images
             });
-
-            console.log(response.data);
+            console.log(response);
         } catch (error) {
             console.log(error);
         }
@@ -310,9 +307,8 @@ const Edit = () => {
                     <label>Price</label>
                     <input className='bg-white p-2 rounded-lg placeholder-dark-gray' placeholder='Price' type="number" defaultValue={product?.currentPrice} required />
                 </div>
-            </form>
 
-            <div className='flex justify-end items-center gap-2 mt-4'>
+                <div className='flex justify-end items-center gap-2 mt-4'>
                 <span>Finish</span>
                 <button className='bg-blue-700 text-neutral-50 rounded-full p-2' type="submit">{isUploading ?
                     <div role="status">
@@ -324,6 +320,7 @@ const Edit = () => {
                     </div> : <FiCheck className='text-3xl'/>
                 }</button>
             </div>
+            </form>  
         </div>
     )
 }
