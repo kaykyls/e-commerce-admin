@@ -83,6 +83,8 @@ const Add: React.FC = () => {
     for (const [key, value] of Object.entries(productData)) {
       formData.append(key, String(value));
     }
+
+    console.log(formData);
   
     try {
       await axios.post('http://localhost:3333/products/add', formData, {

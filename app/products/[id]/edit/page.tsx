@@ -47,6 +47,7 @@ const Edit = () => {
         images: []
     });
     console.log(product);
+    
 
     const [categories, setCategories] = useState<any[]>([]);
     const [selectedColor, setSelectedColor] = useState<string>("");
@@ -54,7 +55,7 @@ const Edit = () => {
     const [selectedPhotos, setSelectedPhotos] = useState<{file: File, color: string}[]>([]);
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [productName, setProductName] = useState<string>("");
-
+console.log(selectedPhotos)
     useEffect(() => {
         getProduct();
         getCategories();
@@ -164,28 +165,80 @@ const Edit = () => {
         }
     }
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setIsUploading(true);
+    interface ProductData {
+        title: string;
+        description: string;
+        currentPrice?: number;
+        categories: string[];
+        selectedColors: string[];
+        selectedSizes: number[];
+        stock: string;
+        colors: string[];
+        sizes: number[];
+        photosColors: string;
+      }
 
+      const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    
+        const formData = new FormData();
+    
+        const productData: ProductData = {
+            title: product.title,
+            description: product.description, // Assuming you use useState for product.description
+            currentPrice: product.currentPrice, // Corrected from product.price
+            categories: product.categories,
+            selectedColors: product.colors, // Assuming colors are selectedColors
+            selectedSizes: product.sizes,
+            stock: JSON.stringify(product.stock), // Corrected from product.stocks
+            colors: product.colors,
+            sizes: product.sizes,
+            photosColors: JSON.stringify(selectedPhotos),
+        };
+    
+        // Append each field to FormData only if it hasn't been added before
+        const addedFields = new Set<string>();
+    
+        for (const [key, value] of Object.entries(productData)) {
+            if (!addedFields.has(key)) {
+                formData.append(key, String(value));
+                addedFields.add(key);
+            }
+        }
+    
+        // Append description and price if they haven't been added before
+        if (!addedFields.has('description')) {
+            formData.append('description', productData.description);
+            addedFields.add('description');
+        }
+    
+        if (!addedFields.has('currentPrice')) {
+            formData.append('currentPrice', String(productData.currentPrice));
+            addedFields.add('currentPrice');
+        }
+    
+        // Append photos
+        selectedPhotos.forEach((photo) => {
+            formData.append('files', photo.file);
+        });
+    
+        console.log(formData);
+    
         try {
-            const response = await axios.put(`http://localhost:3333/products/${id}/edit`, {
-                title: product.title,
-                description: product.description,
-                currentPrice: product.currentPrice,
-                colors: product.colors,
-                categories: product.categories,
-                sizes: product.sizes,
-                stock: product.stock,
-                images: product.images
+            await axios.put(`http://localhost:3333/products/${id}/edit`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    // 'Authorization': `Bearer ${cookies.get('token')}`
+                },
             });
-            console.log(response);
         } catch (error) {
             console.log(error);
         }
-
+    
         setIsUploading(false);
-    }
+    };
+    
+    
     
     return (
         <div className='flex flex-col px-32 justify-center mb-16 w-full text-lg'>
@@ -252,6 +305,19 @@ const Edit = () => {
                                     className='rounded-lg object-cover h-[160px]'/>
                             </div>
                         )}
+                        {
+                            selectedPhotos.map((photo, index) =>
+                                photo.color === selectedColor &&
+                                <div key={index}>
+                                    <Image 
+                                        width={160}
+                                        height={160}
+                                        src={URL.createObjectURL(photo.file)}
+                                        alt={""} 
+                                        className='rounded-lg object-cover h-[160px]'/>
+                                </div>
+                            )
+                        }
                         <label className={` ${selectedColor ? "cursor-pointer" : "cursor-not-allowed"} bg-white w-40 h-40 flex flex-col items-center justify-center rounded-lg text-dark-gray`} htmlFor="image-input">
                     <GoUpload className='w-6 h-6'/>
                     <span>{selectedColor ? "Upload Image" : `Select Color First`}</span>
